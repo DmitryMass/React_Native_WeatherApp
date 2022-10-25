@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "WeatherApp-RN",
-    "slug": "WeatherApp-RN",
+    "name": "Weather App",
+    "slug": "weather-app",
+    "description": "Minimalistick weather App",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/reactIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -28,6 +29,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "privacy": "public"
   }
 }
