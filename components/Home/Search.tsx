@@ -7,16 +7,20 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import useActions from '../../src/hooks/actions';
 import { useDispatch } from 'react-redux';
 import { useFetchData } from '../../src/hooks/useFetchData';
+import { AntDesign } from '@expo/vector-icons';
+import { AntDesign as Close } from '@expo/vector-icons';
 
 interface IInitialValues {
   city: string;
 }
 
-const Search: FC = () => {
+interface ISearchProps {
+  isOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const Search: FC<ISearchProps> = ({ isOpen }) => {
   const dispatch = useDispatch();
   const { changeCity } = useActions();
   const { fetchData } = useFetchData();
@@ -26,16 +30,20 @@ const Search: FC = () => {
 
   const handleSubmit = async (values: IInitialValues, { resetForm }: any) => {
     try {
-      dispatch(changeCity(values.city));
-      fetchData(values.city);
+      if (values.city && values.city.trim()) {
+        dispatch(changeCity(values.city));
+        fetchData(values.city);
+      }
     } catch (e) {
       console.log(e);
     }
+
+    isOpen(false);
     resetForm();
   };
 
   return (
-    <SafeAreaView style={searchStyles.searchContainer}>
+    <View style={searchStyles.searchContainer}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ handleSubmit, handleChange, errors, values }) => (
           <View>
@@ -44,7 +52,7 @@ const Search: FC = () => {
                 <Text>{errors.city}</Text>
               </View>
             )}
-            <SafeAreaView style={searchStyles.form}>
+            <View style={searchStyles.form}>
               <TextInput
                 style={searchStyles.input}
                 value={values.city}
@@ -55,25 +63,36 @@ const Search: FC = () => {
                 style={searchStyles.button}
                 onPress={handleSubmit as (values: any) => void}
               >
-                <Text>Search</Text>
+                <AntDesign name='search1' size={28} color='white' />
               </TouchableOpacity>
-            </SafeAreaView>
+            </View>
           </View>
         )}
       </Formik>
-    </SafeAreaView>
+      <TouchableOpacity
+        onPress={() => isOpen(false)}
+        style={searchStyles.closeButton}
+      >
+        <Close name='close' size={24} color='white' />
+      </TouchableOpacity>
+    </View>
   );
 };
 
 export const searchStyles = StyleSheet.create({
   searchContainer: {
-    marginTop: 200,
+    backgroundColor: '#35508a',
+    height: '25%',
+    marginTop: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
+    position: 'relative',
   },
   form: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -90,
   },
   input: {
     borderRadius: 15,
@@ -88,11 +107,18 @@ export const searchStyles = StyleSheet.create({
 
   button: {
     width: '20%',
-    height: 45,
+    height: 48,
     borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue',
+    backgroundColor: '#0045da',
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
 });
 

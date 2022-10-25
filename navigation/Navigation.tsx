@@ -21,11 +21,11 @@ const Navigation: FC = () => {
           component={Home}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name='Menu'
           component={Menu}
           options={{ headerShown: false }}
-        />
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

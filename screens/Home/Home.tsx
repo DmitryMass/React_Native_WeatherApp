@@ -32,9 +32,8 @@ const Home: FC = ({ navigation }: any) => {
         <ImageBgc
           children={
             <View>
-              <Header navigation={navigation} />
+              <Header />
               <Weather />
-              <Search />
             </View>
           }
         />
