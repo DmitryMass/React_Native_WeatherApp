@@ -9,7 +9,11 @@ interface IHeaderProps {
 }
 
 const Header: FC<IHeaderProps> = ({ navigation }) => {
-  const { dayWeatherData } = useTypedSelector((state) => state.dayWeatherData);
+  const {
+    dayWeatherData: { dayWeatherData },
+    loaderSlice: { loader },
+  } = useTypedSelector((state) => state);
+
   return (
     <View style={headerStyles.headerContainer}>
       <View style={headerStyles.geolocation}>
@@ -19,7 +23,9 @@ const Header: FC<IHeaderProps> = ({ navigation }) => {
           color='white'
           style={headerStyles.geoIcon}
         />
-        <Text style={headerStyles.city}>{dayWeatherData?.name}</Text>
+        <Text style={headerStyles.city}>
+          {loader ? 'Loading...' : dayWeatherData?.name}
+        </Text>
       </View>
       <TouchableOpacity onPress={() => navigation.navigate('Menu')}>
         <AntDesign name='menufold' size={28} color='white' />

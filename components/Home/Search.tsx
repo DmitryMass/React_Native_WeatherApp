@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Formik } from 'formik';
 import {
   StyleSheet,
@@ -8,28 +8,35 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import useActions from '../../src/hooks/actions';
+import { useDispatch } from 'react-redux';
+import { useFetchData } from '../../src/hooks/useFetchData';
 
 interface IInitialValues {
   city: string;
 }
 
 const Search: FC = () => {
-  const [city, setCity] = useState('');
+  const dispatch = useDispatch();
+  const { changeCity } = useActions();
+  const { fetchData } = useFetchData();
   const initialValues: IInitialValues = {
     city: '',
   };
 
-  console.log(city);
+  const handleSubmit = async (values: IInitialValues, { resetForm }: any) => {
+    try {
+      dispatch(changeCity(values.city));
+      fetchData(values.city);
+    } catch (e) {
+      console.log(e);
+    }
+    resetForm();
+  };
 
   return (
     <SafeAreaView style={searchStyles.searchContainer}>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={(values, { resetForm }) => {
-          setCity(values.city);
-          resetForm();
-        }}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ handleSubmit, handleChange, errors, values }) => (
           <View>
             {errors.city && (
@@ -37,7 +44,7 @@ const Search: FC = () => {
                 <Text>{errors.city}</Text>
               </View>
             )}
-            <View style={searchStyles.form}>
+            <SafeAreaView style={searchStyles.form}>
               <TextInput
                 style={searchStyles.input}
                 value={values.city}
@@ -48,9 +55,9 @@ const Search: FC = () => {
                 style={searchStyles.button}
                 onPress={handleSubmit as (values: any) => void}
               >
-                <Text>{'\u1F50D'}</Text>
+                <Text>Search</Text>
               </TouchableOpacity>
-            </View>
+            </SafeAreaView>
           </View>
         )}
       </Formik>
@@ -66,6 +73,7 @@ export const searchStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: -90,
   },
   input: {
     borderRadius: 15,
@@ -77,6 +85,7 @@ export const searchStyles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 1,
   },
+
   button: {
     width: '20%',
     height: 45,
